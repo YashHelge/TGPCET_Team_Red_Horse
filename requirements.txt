@@ -9,3 +9,5 @@ requests
 groq
 scipy
 beautifulsoup4
+fastapi
+uvicorn[standard]
