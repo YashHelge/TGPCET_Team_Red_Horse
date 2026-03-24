@@ -2,12 +2,23 @@
 
 import { useState, useRef, useEffect } from "react";
 import {
-  Send, Sparkles, Loader2, ArrowLeft, MessageCircle,
+  Send, Sparkles, Loader2, ArrowLeft, MessageCircle, RotateCcw,
 } from "lucide-react";
 import type { ChatMessage } from "@/app/lib/types";
 import Link from "next/link";
 
 const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8001";
+
+const STARTERS = [
+  { icon: "🐑", cat: "Behavior", label: "What is herd mentality in stock markets?", detail: "Explain with Indian market examples." },
+  { icon: "😰", cat: "Psychology", label: "How do I avoid panic selling?", detail: "Give me a practical framework." },
+  { icon: "💰", cat: "Strategy", label: "Why is SIP better than lump sum?", detail: "Show me the math." },
+  { icon: "📊", cat: "Research", label: "Explain the CCK herding model", detail: "Keep it simple but accurate." },
+  { icon: "🧠", cat: "Biases", label: "What cognitive biases affect stock investing?", detail: "And how to overcome them." },
+  { icon: "📉", cat: "Crisis", label: "How to stay calm during a market crash?", detail: "Step-by-step mental framework." },
+  { icon: "🎯", cat: "Strategy", label: "What is the behavior gap?", detail: "How much does it cost the average Indian investor?" },
+  { icon: "🔬", cat: "Research", label: "Explain CSAD and cross-sectional dispersion", detail: "In plain English." },
+];
 
 export default function AICopilotPage() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -47,118 +58,192 @@ export default function AICopilotPage() {
     setLoading(false);
   };
 
-  const starters = [
-    { icon: "🐑", label: "What is herd mentality in stock markets?", },
-    { icon: "😰", label: "How do I avoid panic selling?", },
-    { icon: "💰", label: "Why is SIP better than lump sum?", },
-    { icon: "📊", label: "Explain the behavior gap for Indian investors", },
-    { icon: "🧠", label: "What cognitive biases affect stock investing?", },
-    { icon: "📉", label: "How to stay calm during a market crash?", },
-  ];
-
   return (
-    <div className="min-h-screen flex flex-col">
+    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
       {/* Navbar */}
-      <nav className="navbar px-6 py-3 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-          <ArrowLeft size={18} className="text-[var(--text-secondary)]" />
-          <span className="text-sm font-medium text-[var(--text-secondary)]">
-            Back to Dashboard
-          </span>
-        </Link>
-        <div className="flex items-center gap-2">
-          <MessageCircle size={18} className="text-[var(--accent)]" />
-          <span className="text-sm font-bold text-[var(--text)]">AI Copilot</span>
-        </div>
-        <div className="text-[10px] text-[var(--text-muted)] font-mono">
-          llama-3.3-70b
+      <nav className="navbar" style={{ padding: "0 24px" }}>
+        <div style={{ maxWidth: 1000, margin: "0 auto", height: 60, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <Link href="/" style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none" }}>
+            <ArrowLeft size={16} style={{ color: "var(--text-muted)" }} />
+            <span style={{ fontSize: 13, color: "var(--text-secondary)", fontFamily: "var(--font-body)", fontWeight: 500 }}>
+              Dashboard
+            </span>
+          </Link>
+
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <div style={{ width: 28, height: 28, borderRadius: 8, background: "var(--accent-light)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <Sparkles size={14} style={{ color: "var(--accent)" }} />
+            </div>
+            <div>
+              <span style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 15, color: "var(--text)" }}>AI Copilot</span>
+              <span style={{ fontSize: 10, color: "var(--text-muted)", marginLeft: 6, fontFamily: "var(--font-mono)" }}>llama-3.3-70b</span>
+            </div>
+          </div>
+
+          {messages.length > 0 && (
+            <button
+              className="btn-ghost"
+              onClick={() => setMessages([])}
+              style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12 }}
+            >
+              <RotateCcw size={12} /> Clear
+            </button>
+          )}
+          {messages.length === 0 && <div style={{ width: 80 }} />}
         </div>
       </nav>
 
-      {/* Main chat area */}
-      <div className="flex-1 max-w-3xl mx-auto w-full flex flex-col px-4">
-        {/* Messages */}
-        <div className="flex-1 overflow-y-auto py-6 space-y-4">
-          {messages.length === 0 && (
-            <div className="text-center py-16">
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[var(--accent-light)] mb-4">
-                <Sparkles size={28} className="text-[var(--accent)]" />
-              </div>
-              <h2 className="text-xl font-bold text-[var(--text)] mb-2">
-                Ask the AI Copilot anything
-              </h2>
-              <p className="text-sm text-[var(--text-secondary)] mb-8 max-w-md mx-auto">
-                Your personal behavioral finance advisor. Ask about stock biases,
-                investment strategies, or market psychology.
-              </p>
+      {/* Main content */}
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", maxWidth: 800, margin: "0 auto", width: "100%", padding: "0 24px" }}>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-w-lg mx-auto">
-                {starters.map((s) => (
+        {/* Messages */}
+        <div style={{ flex: 1, overflowY: "auto", padding: "32px 0 16px", display: "flex", flexDirection: "column", gap: 14 }}>
+
+          {/* Empty State */}
+          {messages.length === 0 && (
+            <div className="fade-up" style={{ paddingTop: 16 }}>
+              <div style={{ textAlign: "center", marginBottom: 40 }}>
+                <div style={{
+                  width: 64, height: 64, borderRadius: 20, background: "var(--accent-light)",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  margin: "0 auto 16px",
+                }}>
+                  <Sparkles size={28} style={{ color: "var(--accent)" }} />
+                </div>
+                <h1 style={{ fontFamily: "var(--font-display)", fontWeight: 800, fontSize: 28, color: "var(--text)", letterSpacing: "-0.02em", marginBottom: 10 }}>
+                  Ask me anything
+                </h1>
+                <p style={{ fontSize: 14, color: "var(--text-secondary)", maxWidth: 480, margin: "0 auto", lineHeight: 1.7, fontFamily: "var(--font-body)" }}>
+                  Your personal behavioral finance advisor for Indian stock markets. I can explain biases, analyze strategy, or answer any investing question.
+                </p>
+              </div>
+
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                {STARTERS.map((s) => (
                   <button
                     key={s.label}
                     onClick={() => send(s.label)}
-                    className="glass text-left px-4 py-3 text-sm text-[var(--text-secondary)] hover:text-[var(--text)] hover:bg-[var(--accent-light)] transition-all cursor-pointer flex items-center gap-2.5"
-                    style={{ borderRadius: 14 }}
+                    className="glass"
+                    style={{
+                      textAlign: "left", padding: "14px 18px", cursor: "pointer",
+                      border: "1px solid var(--glass-border)", background: "var(--glass)",
+                      transition: "all 0.15s ease", fontFamily: "var(--font-body)",
+                    }}
+                    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "var(--accent-faint)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(99,102,241,0.2)"; }}
+                    onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "var(--glass)"; (e.currentTarget as HTMLElement).style.borderColor = "var(--glass-border)"; }}
                   >
-                    <span className="text-lg">{s.icon}</span>
-                    {s.label}
+                    <div style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
+                      <span style={{ fontSize: 20, flexShrink: 0 }}>{s.icon}</span>
+                      <div>
+                        <div style={{ fontSize: 8, fontWeight: 700, color: "var(--accent)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 3, fontFamily: "var(--font-body)" }}>
+                          {s.cat}
+                        </div>
+                        <div style={{ fontSize: 13, fontWeight: 500, color: "var(--text)", lineHeight: 1.4 }}>{s.label}</div>
+                        <div style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 2 }}>{s.detail}</div>
+                      </div>
+                    </div>
                   </button>
                 ))}
               </div>
             </div>
           )}
 
+          {/* Message Bubbles */}
           {messages.map((m, i) => (
             <div
               key={i}
-              className={`px-5 py-3.5 text-sm leading-relaxed whitespace-pre-wrap max-w-[85%] ${
-                m.role === "user"
-                  ? "chat-user ml-auto"
-                  : "chat-ai mr-auto"
-              }`}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: m.role === "user" ? "flex-end" : "flex-start",
+              }}
             >
               {m.role === "assistant" && (
-                <div className="flex items-center gap-1.5 mb-1.5">
-                  <Sparkles size={12} className="text-[var(--accent)]" />
-                  <span className="text-[10px] font-semibold text-[var(--accent)] uppercase tracking-wider">
+                <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 6 }}>
+                  <div style={{ width: 22, height: 22, borderRadius: 6, background: "var(--accent-light)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <Sparkles size={11} style={{ color: "var(--accent)" }} />
+                  </div>
+                  <span style={{ fontSize: 10, fontWeight: 700, color: "var(--accent)", textTransform: "uppercase", letterSpacing: "0.08em", fontFamily: "var(--font-body)" }}>
                     AI Copilot
                   </span>
                 </div>
               )}
-              {m.content}
+              <div
+                className={m.role === "user" ? "chat-user" : "chat-ai"}
+                style={{
+                  padding: "14px 18px",
+                  fontSize: 14,
+                  lineHeight: 1.7,
+                  whiteSpace: "pre-wrap",
+                  maxWidth: "80%",
+                  fontFamily: "var(--font-body)",
+                }}
+              >
+                {m.content}
+              </div>
             </div>
           ))}
 
           {loading && (
-            <div className="chat-ai mr-auto px-5 py-3.5 flex items-center gap-2 max-w-[85%]">
-              <Loader2 size={14} className="animate-spin text-[var(--accent)]" />
-              <span className="text-sm text-[var(--text-muted)]">Thinking...</span>
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 6 }}>
+                <div style={{ width: 22, height: 22, borderRadius: 6, background: "var(--accent-light)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <Sparkles size={11} style={{ color: "var(--accent)" }} />
+                </div>
+                <span style={{ fontSize: 10, fontWeight: 700, color: "var(--accent)", textTransform: "uppercase", letterSpacing: "0.08em", fontFamily: "var(--font-body)" }}>
+                  AI Copilot
+                </span>
+              </div>
+              <div className="chat-ai" style={{ padding: "14px 18px", display: "flex", alignItems: "center", gap: 10 }}>
+                <Loader2 size={14} className="spin-slow" style={{ color: "var(--accent)" }} />
+                <span style={{ fontSize: 13, color: "var(--text-muted)", fontFamily: "var(--font-body)" }}>Thinking...</span>
+              </div>
             </div>
           )}
           <div ref={bottomRef} />
         </div>
 
-        {/* Input */}
-        <div className="py-4 border-t border-[var(--glass-border)]">
-          <div className="flex items-center gap-3">
-            <input
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && send(input)}
-              placeholder="Ask about investing biases, stock strategies..."
-              className="flex-1 glass px-5 py-3 text-sm text-[var(--text)] placeholder-[var(--text-muted)] outline-none"
-              style={{ borderRadius: 14 }}
-            />
+        {/* Input Area */}
+        <div style={{ padding: "16px 0 32px", borderTop: "1px solid var(--glass-border)" }}>
+          <div style={{ display: "flex", gap: 10, alignItems: "flex-end" }}>
+            <div style={{ flex: 1, position: "relative" }}>
+              <textarea
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    send(input);
+                  }
+                }}
+                placeholder="Ask about investing biases, stock strategies, or behavioral finance..."
+                className="glass"
+                rows={1}
+                style={{
+                  width: "100%", padding: "14px 18px", fontSize: 14,
+                  color: "var(--text)", outline: "none", resize: "none",
+                  fontFamily: "var(--font-body)", lineHeight: 1.6,
+                  border: "1px solid transparent",
+                  transition: "border-color 0.15s ease",
+                  borderRadius: 16,
+                  maxHeight: 120,
+                  overflow: "auto",
+                }}
+                onFocus={e => (e.currentTarget.style.borderColor = "rgba(99,102,241,0.25)")}
+                onBlur={e => (e.currentTarget.style.borderColor = "transparent")}
+              />
+            </div>
             <button
               onClick={() => send(input)}
               disabled={!input.trim() || loading}
-              className="p-3 rounded-xl bg-[var(--accent)] text-white disabled:opacity-30 hover:brightness-105 transition-all cursor-pointer shrink-0"
+              className="btn-primary"
+              style={{ padding: "14px 20px", borderRadius: 14, flexShrink: 0, display: "flex", alignItems: "center", gap: 6 }}
             >
-              <Send size={16} />
+              <Send size={15} />
             </button>
           </div>
-          <p className="text-[10px] text-[var(--text-muted)] text-center mt-2">
-            Powered by Groq · llama-3.3-70b-versatile · Not financial advice
+          <p style={{ fontSize: 10, color: "var(--text-dim)", textAlign: "center", marginTop: 10, fontFamily: "var(--font-body)" }}>
+            Powered by Groq · llama-3.3-70b-versatile · Educational use only · Not financial advice
           </p>
         </div>
       </div>
