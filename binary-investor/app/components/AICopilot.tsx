@@ -4,6 +4,8 @@ import { useState, useRef, useEffect } from "react";
 import { Send, Sparkles, Loader2, ExternalLink } from "lucide-react";
 import type { ChatMessage, AnalysisResult } from "@/app/lib/types";
 import Link from "next/link";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 interface Props {
   result: AnalysisResult | null;
@@ -133,7 +135,6 @@ P/E Ratio: ${result.quote.peRatio} | Market Cap: ₹${result.quote.marketCap}`
               padding: "10px 14px",
               fontSize: 12,
               lineHeight: 1.6,
-              whiteSpace: "pre-wrap",
               maxWidth: "90%",
               alignSelf: m.role === "user" ? "flex-end" : "flex-start",
               fontFamily: "var(--font-body)",
@@ -147,7 +148,15 @@ P/E Ratio: ${result.quote.peRatio} | Market Cap: ₹${result.quote.marketCap}`
                 </span>
               </div>
             )}
-            {m.content}
+            {m.role === "assistant" ? (
+              <div className="markdown-body">
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                  {m.content}
+                </ReactMarkdown>
+              </div>
+            ) : (
+              <div style={{ whiteSpace: "pre-wrap" }}>{m.content}</div>
+            )}
           </div>
         ))}
 

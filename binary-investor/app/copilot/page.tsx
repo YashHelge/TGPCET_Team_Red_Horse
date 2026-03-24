@@ -6,6 +6,8 @@ import {
 } from "lucide-react";
 import type { ChatMessage } from "@/app/lib/types";
 import Link from "next/link";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8001";
 
@@ -174,12 +176,19 @@ export default function AICopilotPage() {
                   padding: "14px 18px",
                   fontSize: 14,
                   lineHeight: 1.7,
-                  whiteSpace: "pre-wrap",
                   maxWidth: "80%",
                   fontFamily: "var(--font-body)",
                 }}
               >
-                {m.content}
+                {m.role === "assistant" ? (
+                  <div className="markdown-body">
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                      {m.content}
+                    </ReactMarkdown>
+                  </div>
+                ) : (
+                  <div style={{ whiteSpace: "pre-wrap" }}>{m.content}</div>
+                )}
               </div>
             </div>
           ))}
