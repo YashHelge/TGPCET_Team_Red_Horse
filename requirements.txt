@@ -1,0 +1,11 @@
+streamlit
+pandas
+numpy
+plotly
+yfinance
+scikit-learn
+python-dotenv
+requests
+groq
+scipy
+beautifulsoup4
