@@ -9,7 +9,7 @@ import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
-const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8001";
+const API = process.env.NEXT_PUBLIC_API_URL || "";
 
 const STARTERS = [
   { icon: "🐑", cat: "Behavior", label: "What is herd mentality in stock markets?", detail: "Explain with Indian market examples." },
@@ -73,11 +73,11 @@ export default function AICopilotPage() {
           </Link>
 
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <div style={{ width: 28, height: 28, borderRadius: 8, background: "var(--accent-light)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <div style={{ width: 28, height: 28, borderRadius: 8, background: "var(--accent-soft)", display: "flex", alignItems: "center", justifyContent: "center" }}>
               <Sparkles size={14} style={{ color: "var(--accent)" }} />
             </div>
             <div>
-              <span style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 15, color: "var(--text)" }}>AI Copilot</span>
+              <span style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 15, color: "var(--text)" }}>TradeOS AI</span>
               <span style={{ fontSize: 10, color: "var(--text-muted)", marginLeft: 6, fontFamily: "var(--font-mono)" }}>llama-3.3-70b</span>
             </div>
           </div>
@@ -106,7 +106,7 @@ export default function AICopilotPage() {
             <div className="fade-up" style={{ paddingTop: 16 }}>
               <div style={{ textAlign: "center", marginBottom: 40 }}>
                 <div style={{
-                  width: 64, height: 64, borderRadius: 20, background: "var(--accent-light)",
+                  width: 64, height: 64, borderRadius: 20, background: "var(--accent-soft)",
                   display: "flex", alignItems: "center", justifyContent: "center",
                   margin: "0 auto 16px",
                 }}>
@@ -128,11 +128,11 @@ export default function AICopilotPage() {
                     className="glass"
                     style={{
                       textAlign: "left", padding: "14px 18px", cursor: "pointer",
-                      border: "1px solid var(--glass-border)", background: "var(--glass)",
+                      border: "1px solid var(--border)", background: "var(--surface)",
                       transition: "all 0.15s ease", fontFamily: "var(--font-body)",
                     }}
-                    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "var(--accent-faint)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(99,102,241,0.2)"; }}
-                    onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "var(--glass)"; (e.currentTarget as HTMLElement).style.borderColor = "var(--glass-border)"; }}
+                    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "var(--accent-soft)"; (e.currentTarget as HTMLElement).style.borderColor = "var(--accent)"; }}
+                    onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "var(--surface)"; (e.currentTarget as HTMLElement).style.borderColor = "var(--border)"; }}
                   >
                     <div style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
                       <span style={{ fontSize: 20, flexShrink: 0 }}>{s.icon}</span>
@@ -162,11 +162,11 @@ export default function AICopilotPage() {
             >
               {m.role === "assistant" && (
                 <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 6 }}>
-                  <div style={{ width: 22, height: 22, borderRadius: 6, background: "var(--accent-light)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <div style={{ width: 22, height: 22, borderRadius: 6, background: "var(--accent-soft)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                     <Sparkles size={11} style={{ color: "var(--accent)" }} />
                   </div>
                   <span style={{ fontSize: 10, fontWeight: 700, color: "var(--accent)", textTransform: "uppercase", letterSpacing: "0.08em", fontFamily: "var(--font-body)" }}>
-                    AI Copilot
+                    TradeOS AI
                   </span>
                 </div>
               )}
@@ -213,7 +213,7 @@ export default function AICopilotPage() {
         </div>
 
         {/* Input Area */}
-        <div style={{ padding: "16px 0 32px", borderTop: "1px solid var(--glass-border)" }}>
+        <div style={{ padding: "16px 0 32px", borderTop: "1px solid var(--border)" }}>
           <div style={{ display: "flex", gap: 10, alignItems: "flex-end" }}>
             <div style={{ flex: 1, position: "relative" }}>
               <textarea

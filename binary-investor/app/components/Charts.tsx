@@ -6,18 +6,21 @@ import {
   ResponsiveContainer, Cell, Legend, ReferenceLine,
   ScatterChart, Scatter,
 } from "recharts";
-import type {
-  PricePoint, CSADPoint, VolumePoint,
-  HistogramBin, MissingDayScenario,
-} from "@/app/lib/types";
+import type { PricePoint } from "@/app/lib/types";
 
-const ACCENT = "#3730A3";
-const ACCENT2 = "#6366F1";
-const UP = "#059669";
-const DOWN = "#DC2626";
-const MUTED = "#8C7B65";
-const GRID = "rgba(30,20,10,0.05)";
-const AMBER = "#D97706";
+/* Local types for chart-specific data */
+export interface CSADPoint { absReturn: number; csad: number; mktReturn: number; fitted: number; }
+export interface VolumePoint { date: string; volume: number; zscore: number; returns: number; isPanic: boolean; }
+export interface HistogramBin { binStart: number; binEnd: number; sip: number; panic: number; }
+export interface MissingDayScenario { scenario: string; finalValue: number; totalReturn: number; cagr: number; reduction: number; }
+
+const ACCENT = "#1E3A5F";
+const ACCENT2 = "#4A7AB5";
+const UP = "#0F7B4F";
+const DOWN = "#B91C1C";
+const MUTED = "#7A7A7A";
+const GRID = "var(--border-light, rgba(30,20,10,0.05))";
+const AMBER = "#A16207";
 
 /* ─── Shared Tooltip ──────────────────────────────── */
 function ChartTooltip({ active, payload, label }: any) {
@@ -157,7 +160,7 @@ export function CandlestickChart({ data }: { data: PricePoint[] }) {
                     </span>
                   </div>
                 ))}
-                <div style={{ display: "flex", justifyContent: "space-between", gap: 16, marginTop: 4, paddingTop: 4, borderTop: "1px solid var(--glass-border)" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", gap: 16, marginTop: 4, paddingTop: 4, borderTop: "1px solid var(--border)" }}>
                   <span style={{ fontSize: 11, color: "var(--text-muted)" }}>Volume</span>
                   <span style={{ fontSize: 11, fontWeight: 600, color: "var(--text)", fontFamily: "var(--font-mono)" }}>
                     {Number(d.volume).toLocaleString("en-IN")}

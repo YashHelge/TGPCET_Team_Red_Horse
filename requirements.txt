@@ -11,3 +11,4 @@ scipy
 beautifulsoup4
 fastapi
 uvicorn[standard]
+httpx[http2]
